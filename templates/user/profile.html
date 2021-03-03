@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="card text-white bg-dark col-sm-5" style="margin:5px;">
+    <div class="card-header">{{ g.user.username}}</div>
+      <div class="card-body">
+        <div><b>Username:</b> {{ g.user.username}}</div>
+        <div><b>Email:</b> {{ g.user.email}}</div>
+        <div><b>First Name:</b> {{ g.user.first_name}}</div>
+        <div><b>Last Name:</b> {{ g.user.last_name}}</div>
+        <div><b>Role:</b> {{ g.user.role}}
+        <div><b>Avatar Image URL:</b> {{ g.user.avatar}}</div>
+        <p class="card-text" id="{{ g.user.username }}">
+            About {{g.user.username}}:
+            <p>{% if g.user.bio %}{{g.user.bio}}{% else %} Whoops! There's nothing here... {% endif %}</p> 
+        <p><a href="/profile/edit"><button type="button" href="" class="btn btn-secondary">Edit your Profile!</button></a></p>
+  </div>
+</div>
+
+{% endblock %}

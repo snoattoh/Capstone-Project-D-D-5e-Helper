@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid">
+        {% if monster %}
+        <div class="card text-white bg-dark col-sm-5" style="margin:5px;">
+          <div class="card-header">{{ monster.name }}</div>
+            <div class="card-body">
+              <p class="card-text" id="{{ monster.index }}">
+                  <div class="monster-description">{{monster.size}} {{monster.type}} {{monster.alignment}}</div>
+                
+                  <div class="gradient" style="margin-bottom: -.5px"></div>
+                  <div><span class="bold themed-color">Armor Class</span><span> {{monster.armor_class}} </span></div>
+                  <div><span class="bold themed-color">Hit Points</span><span> {{monster.hit_points}} {{monster.hit_dice}}</span></div>
+                  <div><span class="bold themed-color">Speed</span><span> {{monster.speed.walk}} {% if monster.speed.swim %}, swim {{monster.speed.swim}}{% endif %}</span></div>
+                  <div class="gradient" style="margin-bottom: -.5px"></div>
+                  <table>
+                    <tr><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr>
+                    <tr><td>{{monster.strength}}</td><td>{{monster.dexterity}}</td><td>{{monster.constitution}} </td><td>{{monster.intelligence}} </td><td>{{monster.wisdom}} </td><td>{{monster.charisma}}</td></tr>
+                  </table>
+              </p>
+            </div>
+        </div>
+        {% elif spell %}
+        <div class="card text-white bg-dark col-sm-5" style="margin:5px;">
+            <div class="card-header">{{ spell.name }}</div>
+              <div class="card-title">{% if spell.level == 0 %}Cantrip {% elif spell.level == 1 %}1st level {% elif spell.level == 2 %}2nd level {% elif spell.level == 3 %}3rd level {% else %}{{spell.level}}th level{% endif %}{{spell.school.name}}</div>
+              <div class="card-body">
+                <div><b>Casting Time:</b> {{spell.casting_time}}</div>
+                <div><b>Range:</b> {{spell.range}}</div>
+                <div><b>Components:</b> {% for comp in spell.components %} {{comp}} {% endfor %} {% if spell.material %} ({{spell.material}}) {% endif %}</div>
+                <div><b>Duration:</b> {{spell.duration}}</div>
+                <div><b>Classes:</b> {% for class in spell.classes %} {{class.name}} {% endfor %}
+
+                <p class="card-text" id="{{ spell.index }}">
+
+                    <div class="spell-description">
+                        <p>{{spell.desc[0]}}</p> 
+                        {% if spell.higher_level %}<p><b>At Higher Levels:</b> {{spell.higher_level[0]}} {% endif %}</p>
+                    </div>
+                    
+                    <div class="gradient" style="margin-bottom: -.5px"></div>
+
+              </div>
+          </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

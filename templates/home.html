@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid">
+    {% if user %}
+        Hello {{ g.user.username }}!
+    {% else %}
+        Hello!
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="col-sm-12">
+  {% if monsters %}
+  <h1>Monsters</h1>
+    <div class="row">
+      {% for monster in monsters.results %}
+        <div class="card text-white bg-dark col-sm-3" style="margin:5px;">
+          <div class="card-header">{{ monster.name }}</div>
+            <div class="card-body">
+              <p class="card-text" id="{{ monster.index }}"></p>
+              <a href="/monsters/{{ monster.index }}"><button type="button" href="" class="btn btn-secondary">More Info</button></a>
+            </div>
+        </div>
+      {% endfor %}
+    </div>
+    {% elif spells %}
+    <h1>Spells</h1>
+      <div class="row">
+      {% for spell in spells.results %}
+        <div class="card text-white bg-dark col-sm-3" style="margin:5px;">
+          <div class="card-header">{{ spell.name }}</div>
+            <div class="card-body">
+              <p class="card-text" id="{{ spell.index }}"></p>
+              <a href="/spells/{{ spell.index }}"><button type="button" href="" class="btn btn-secondary">More Info</button></a>
+            </div>
+        </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

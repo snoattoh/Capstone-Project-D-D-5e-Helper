@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>5e Sources</title>
+  <link rel="stylesheet"
+  href="https://unpkg.com/bootstrap/dist/css/bootstrap.css">
+  <script src="https://unpkg.com/jquery"></script>
+    <script src="https://unpkg.com/popper"></script>
+  <script src="https://unpkg.com/bootstrap"></script>
+
+  <link rel="stylesheet"
+  href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand navbar-dark bg-dark sticky-top shadow">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a href="/" class="navbar-brand">
+          <span>5e Sources</span>
+        </a>
+      </div>
+      <ul class="nav navbar-nav me-auto mb-2 mb-lg-0">
+        {% if not g.user %}
+        <li class="nav-item">
+          <a class="nav-link" href="/signup">Sign up</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/login">Log in</a></li>
+        {% else %}
+        <li class="nav-item">
+          <a href="/profile">
+            <img src="{{ g.user.avatar }}" width="50" height="50" alt="{{ g.user.username }}">
+          </a>
+        </li>
+        <li class="nav-item"> 
+          <a class="nav-link" href="/logout">Log out</a>
+        </li>
+        {% endif %}
+        <li class="nav-item"> 
+          <a class="nav-link" href="/monsters">Monsters</a>
+        </li>
+        <li class="nav-item"> 
+          <a class="nav-link" href="/spells">Spells</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container-fluid" style="margin:5px 0px 5px 0px;">
+    {% block content %}
+    {% endblock %}
+  </div>
+  <script src="https://unpkg.com/jquery"></script>
+  <script src="https://unpkg.com/axios/dist/axios.js"></script>
+  <script src="/static/js/main.js"></script>   
+  </body>
+</html>

@@ -1,0 +1,9 @@
+table, td {
+    border: 1px solid #000;
+}
+
+.gradient {
+    background: linear-gradient(10deg, #400433, #8C7706);
+    height:5px;
+    margin:7px 0px;
+}
