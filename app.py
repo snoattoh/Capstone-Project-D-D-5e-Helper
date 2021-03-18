@@ -14,7 +14,7 @@ app = Flask(__name__)
 # Get DB_URI from environ variable (useful for production/testing) or,
 # if not set there, use development local db.
 app.config['SQLALCHEMY_DATABASE_URI'] = (
-os.environ.get('DATABASE_URL', 'postgres:///dndboard'))
+os.environ.get('DATABASE_URL', 'postgresql:///dndboard'))
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
@@ -151,6 +151,7 @@ def edit_user():
             form.first_name.data = g.user.first_name
             form.last_name.data = g.user.last_name
             form.style.data = g.user.style
+            form.style.avatar = g.user.avatar
 
             return render_template('user/editprofile.html', form=form)
     else:
@@ -162,6 +163,7 @@ def edit_user():
 # External Routes:
 
 #We'll call the lists of the api on the back end
+#Originally wanted to call the indexes on the front end, but figured it'd be easier just to use flask for now
 @app.route('/spells')
 def list_spells():
     """Returns a page listing all of the spells

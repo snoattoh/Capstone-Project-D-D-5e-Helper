@@ -4,9 +4,9 @@ const BASE_URL = "http://localhost:5000"
 
 /** handle form for adding of new cupcakes */
 
-$("#new-cupcake-form").on("submit", async function (evt) {
+$("#monster-form").on("submit", async function (evt) {
   evt.preventDefault();
-
+  
   let flavor = $("#form-flavor").val();
   let rating = $("#form-rating").val();
   let size = $("#form-size").val();

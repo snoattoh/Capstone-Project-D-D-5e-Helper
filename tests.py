@@ -1,10 +1,11 @@
 from unittest import TestCase
 
 from app import app
-from models import db, Cupcake
+from flask_bcrypt import Bcrypt
+from models import db, connect_db, User, Board, Piece
 
 # Use test database and don't clutter tests with SQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///cupcakes_test'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///dndboard'
 app.config['SQLALCHEMY_ECHO'] = False
 
 # Make Flask errors be real errors, rather than HTML pages with error info
@@ -13,97 +14,113 @@ app.config['TESTING'] = True
 db.drop_all()
 db.create_all()
 
-
-CUPCAKE_DATA = {
-    "flavor": "TestFlavor",
-    "size": "TestSize",
-    "rating": 5,
-    "image": "http://test.com/cupcake.jpg"
+USER_DATA_1 = {
+    "username":"Test",
+    "email":"test@gmail.com",
+    "password":bcrypt.generate_password_hash("testword").decode('UTF-8'),
+    "first_name":"Test"
+    "last_name": "Tester"
 }
 
-CUPCAKE_DATA_2 = {
-    "flavor": "TestFlavor2",
-    "size": "TestSize2",
-    "rating": 10,
-    "image": "http://test.com/cupcake2.jpg"
+USER_DATA_2 = {
+    "username":"TestAid",
+    "email":"testaid@gmail.com",
+    "password":bcrypt.generate_password_hash("testword").decode('UTF-8'),
+    "first_name":"Test"
+    "last_name": "Ruiner"
 }
 
+USER_DATA_3 = {
+    "username":"TestAid",
+    "email":"testaid@gmail.com",
+    "password":bcrypt.generate_password_hash("testword").decode('UTF-8'),
+    "first_name":"Test"
+    "last_name": "Ruiner"
+}
 
-class CupcakeViewsTestCase(TestCase):
+class DNDSourcesTestCases(TestCase):
     """Tests for views of API."""
 
     def setUp(self):
         """Make demo data."""
 
-        Cupcake.query.delete()
+        User.query.delete()
 
-        cupcake = Cupcake(**CUPCAKE_DATA)
-        db.session.add(cupcake)
+        user = User(USER_DATA_1)
+        db.session.add(user)
         db.session.commit()
 
-        self.cupcake = cupcake
+        self.user = user
 
     def tearDown(self):
         """Clean up fouled transactions."""
 
         db.session.rollback()
-
-    def test_list_cupcakes(self):
+    #WE don't need to test the external APIs, but we need to confirm our endpoints poitng to them works
+    def test_list_monsters(self):
         with app.test_client() as client:
-            resp = client.get("/api/cupcakes")
-
+            resp = client.get("/monsters")
+            self.assertEqual(resp.status_code, 200)
+    
+    def test_get_monster(self):
+        with app.test_client() as client:
+            resp = client.get("/monsters/aboleth")
             self.assertEqual(resp.status_code, 200)
 
-            data = resp.json
-            self.assertEqual(data, {
-                "cupcakes": [
-                    {
-                        "id": self.cupcake.id,
-                        "flavor": "TestFlavor",
-                        "size": "TestSize",
-                        "rating": 5,
-                        "image": "http://test.com/cupcake.jpg"
-                    }
-                ]
-            })
-
-    def test_get_cupcake(self):
+    def test_list_spells(self):
         with app.test_client() as client:
-            url = f"/api/cupcakes/{self.cupcake.id}"
-            resp = client.get(url)
-
+            resp = client.get("/spells")
             self.assertEqual(resp.status_code, 200)
-            data = resp.json
-            self.assertEqual(data, {
-                "cupcake": {
-                    "id": self.cupcake.id,
-                    "flavor": "TestFlavor",
-                    "size": "TestSize",
-                    "rating": 5,
-                    "image": "http://test.com/cupcake.jpg"
-                }
-            })
 
-    def test_create_cupcake(self):
+    def test_get_spell(self):
         with app.test_client() as client:
-            url = "/api/cupcakes"
-            resp = client.post(url, json=CUPCAKE_DATA_2)
+            resp = client.get("/spells/acid-arrow")
+            self.assertEqual(resp.status_code, 200)
 
+    def test_create_user(self):
+        with app.test_client() as client:
+            url = "/signup"
+            resp = client.post(url, form=USER_DATA_3)
             self.assertEqual(resp.status_code, 201)
-
             data = resp.json
 
-            # don't know what ID we'll get, make sure it's an int & normalize
-            self.assertIsInstance(data['cupcake']['id'], int)
-            del data['cupcake']['id']
+            self.assertIsInstance(data['user']['id'], int)
+            del data['user']['id']
 
             self.assertEqual(data, {
-                "cupcake": {
-                    "flavor": "TestFlavor2",
-                    "size": "TestSize2",
-                    "rating": 10,
-                    "image": "http://test.com/cupcake2.jpg"
-                }
+                USER_DATA_3
             })
 
-            self.assertEqual(Cupcake.query.count(), 2)
+            self.assertEqual(User.query.count(), 2)
+
+   def test_edit_user(self):
+        with app.test_client() as client:
+            url = "/profile/edit"
+            resp = client.post(url, form=USER_DATA_2)
+            self.assertEqual(resp.status_code, 201)
+            data = resp.json
+
+            self.assertIsInstance(data['user']['id'], int)
+            del data['user']['id']
+
+            self.assertEqual(data, {
+                USER_DATA_2
+            })
+
+            self.assertEqual(User.query.count(), 2)
+
+   def test_login(self):
+        with app.test_client() as client:
+            url = "/login"
+            resp = client.post(url, form=USER_DATA_1)
+            self.assertEqual(resp.status_code, 200)
+            data = resp.json
+
+            self.assertIsInstance(data['user']['id'], int)
+            del data['user']['id']
+
+            self.assertEqual(data, {
+                USER_DATA_2
+            })
+
+            self.assertEqual(User.query.count(), 2)

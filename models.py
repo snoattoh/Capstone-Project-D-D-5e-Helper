@@ -8,7 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 bcrypt = Bcrypt()
 db = SQLAlchemy()
 
-DEFAULT_IMAGE_URL = "https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg"
+DEFAULT_IMAGE_URL = "https://cdn.discordapp.com/attachments/397591096592695296/816784472833130547/image0.png"
 
 class User(db.Model):
     """User in the system."""
@@ -72,7 +72,6 @@ class User(db.Model):
         db.DateTime,
         nullable=False,
         default=datetime.utcnow(),
-
     )
 
     avatar = db.Column(
@@ -117,6 +116,7 @@ class User(db.Model):
                 user.data['last_name'] = form.last_name.data
                 user.data['style'] = form.style.data
                 user.data['bio'] = form.bio.data
+                user.data['avatar'] = form.avatar.data
                 db.session.commit()
                 
             return user

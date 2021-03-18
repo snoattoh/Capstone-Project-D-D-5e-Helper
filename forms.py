@@ -22,6 +22,7 @@ class UserEditForm(FlaskForm):
     last_name = StringField('Last Name', validators=[DataRequired()])
     style = SelectField('Style', choices=[('light', 'Light'), ('dark', 'Dark')])
     bio = TextAreaField('Bio or Description')
+    avatar = StringField('Avatar', validators=[DataRequired()])
     password = PasswordField('Password', validators=[Length(min=6)])
 
 class LoginForm(FlaskForm):
